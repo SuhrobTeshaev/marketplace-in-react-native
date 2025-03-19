@@ -58,7 +58,7 @@ const CategoryNav = ({
   };
 
   return (
-    <View className="bg-white w-full h-20 border-b border-gray-200">
+    <View className="bg-white w-full border-b border-gray-200 py-2">
       <ScrollView
         horizontal
         showsHorizontalScrollIndicator={false}
@@ -71,11 +71,11 @@ const CategoryNav = ({
             <TouchableOpacity
               key={category.id}
               onPress={() => handleCategoryPress(category.id)}
-              className="items-center justify-center mx-3 w-14"
+              className="items-center justify-center mx-2 w-16"
               activeOpacity={0.7}
             >
               <View
-                className={`w-12 h-12 rounded-full items-center justify-center mb-1 ${isSelected ? "bg-blue-100" : "bg-gray-100"}`}
+                className={`w-14 h-14 rounded-lg items-center justify-center mb-1 ${isSelected ? "bg-blue-100" : "bg-gray-100"}`}
               >
                 {React.cloneElement(category.icon as React.ReactElement, {
                   color: isSelected ? "#3B82F6" : "#4B5563",

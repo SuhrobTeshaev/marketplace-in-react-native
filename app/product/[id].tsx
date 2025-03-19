@@ -195,338 +195,145 @@ const productData: { [key: string]: Product } = {
       "https://images.unsplash.com/photo-1580480055273-228ff5388ef8?w=800&q=80",
     isFavorite: false,
     description:
-      "High-quality ergonomic office chair with lumbar support, adjustable height, and breathable mesh back. Designed for comfort during long work hours.",
-    sizes: [],
-    colors: ["Black", "Gray"],
-    inStock: true,
-    rating: 4.8,
-    reviews: 256,
-  },
-  "13": {
-    id: "13",
-    name: 'Ultrawide Monitor 34"',
-    price: 349.99,
-    image:
-      "https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?w=800&q=80",
-    isFavorite: true,
-    description:
-      "34-inch ultrawide curved monitor with 3440x1440 resolution, 144Hz refresh rate, and HDR support. Immersive viewing experience for work and gaming.",
-    sizes: [],
-    colors: ["Black"],
-    inStock: true,
-    rating: 4.9,
-    reviews: 178,
-  },
-  "14": {
-    id: "14",
-    name: "Laptop Stand",
-    price: 39.99,
-    image:
-      "https://images.unsplash.com/photo-1611174797136-5e1a1e0e3e04?w=800&q=80",
-    isFavorite: false,
-    description:
-      "Adjustable aluminum laptop stand that elevates your screen to eye level. Improves posture and keeps your laptop cool with better airflow.",
-    sizes: [],
-    colors: ["Silver", "Black", "Space Gray"],
-    inStock: true,
-    rating: 4.6,
-    reviews: 203,
-  },
-  "15": {
-    id: "15",
-    name: "Wireless Mouse",
-    price: 49.99,
-    image:
-      "https://images.unsplash.com/photo-1615663245857-ac93bb7c39e7?w=800&q=80",
-    isFavorite: true,
-    description:
-      "Ergonomic wireless mouse with precision tracking, programmable buttons, and long battery life. Comfortable design for all-day use.",
+      "High-quality ergonomic office chair with lumbar support, adjustable height, and breathable mesh back. Designed for comfort during long work sessions.",
     sizes: [],
     colors: ["Black", "Gray", "Blue"],
     inStock: true,
-    rating: 4.7,
-    reviews: 189,
-  },
-  "16": {
-    id: "16",
-    name: "External SSD 1TB",
-    price: 129.99,
-    image:
-      "https://images.unsplash.com/photo-1597740985671-2a8a3b80502e?w=800&q=80",
-    isFavorite: false,
-    description:
-      "Ultra-fast 1TB external SSD with USB-C connectivity. Compact, durable design with transfer speeds up to 1050MB/s for quick file access.",
-    sizes: ["500GB", "1TB", "2TB"],
-    colors: ["Black", "Silver"],
-    inStock: true,
-    rating: 4.8,
-    reviews: 234,
-  },
-  "17": {
-    id: "17",
-    name: "Noise Cancelling Microphone",
-    price: 89.99,
-    image:
-      "https://images.unsplash.com/photo-1590602847861-f357a9332bbc?w=800&q=80",
-    isFavorite: true,
-    description:
-      "Professional USB microphone with noise cancellation technology. Perfect for podcasting, streaming, and video conferencing with crystal clear audio.",
-    sizes: [],
-    colors: ["Black", "Silver"],
-    inStock: true,
     rating: 4.6,
-    reviews: 167,
-  },
-  "18": {
-    id: "18",
-    name: "Webcam HD 1080p",
-    price: 69.99,
-    image:
-      "https://images.unsplash.com/photo-1596566267081-7e152bb76942?w=800&q=80",
-    isFavorite: false,
-    description:
-      "Full HD 1080p webcam with auto light correction and built-in microphone. Ideal for video calls, streaming, and content creation.",
-    sizes: [],
-    colors: ["Black"],
-    inStock: true,
-    rating: 4.5,
-    reviews: 156,
-  },
-  "19": {
-    id: "19",
-    name: "USB-C Hub",
-    price: 45.99,
-    image:
-      "https://images.unsplash.com/photo-1625723044792-44de16ccb4e9?w=800&q=80",
-    isFavorite: true,
-    description:
-      "7-in-1 USB-C hub with HDMI, USB 3.0, SD card reader, and power delivery. Expand your laptop's connectivity with this compact adapter.",
-    sizes: [],
-    colors: ["Silver", "Space Gray"],
-    inStock: true,
-    rating: 4.4,
-    reviews: 189,
-  },
-  "20": {
-    id: "20",
-    name: "Desk Organizer",
-    price: 29.99,
-    image:
-      "https://images.unsplash.com/photo-1544816155-12df9643f363?w=800&q=80",
-    isFavorite: false,
-    description:
-      "Multifunctional desk organizer with compartments for stationery, devices, and accessories. Keep your workspace tidy and efficient.",
-    sizes: [],
-    colors: ["Black", "White", "Walnut"],
-    inStock: true,
-    rating: 4.3,
-    reviews: 156,
+    reviews: 215,
   },
 };
 
-export default function ProductDetail() {
+const ProductDetail = () => {
   const { id } = useLocalSearchParams();
   const router = useRouter();
-  const { addToCart, isInCart: checkIsInCart } = useCart();
-  const [isFavorite, setIsFavorite] = React.useState(false);
-  const [selectedSize, setSelectedSize] = React.useState("");
-  const [selectedColor, setSelectedColor] = React.useState("");
-  const [isInCart, setIsInCart] = React.useState(false);
-  const [addedToCartAnimation, setAddedToCartAnimation] = React.useState(false);
+  const { addToCart, isInCart } = useCart();
+  const product = productData[id as string];
 
-  // Get product data based on ID
-  const product: Product = productData[id as string] || {
-    id: "unknown",
-    name: "Product Not Found",
-    price: 0,
-    image:
-      "https://images.unsplash.com/photo-1560393464-5c69a73c5770?w=800&q=80",
-    isFavorite: false,
-    description: "This product could not be found.",
-    sizes: [],
-    colors: [],
-    inStock: false,
-    rating: 0,
-    reviews: 0,
-  };
+  if (!product) {
+    return (
+      <View className="flex-1 items-center justify-center bg-white">
+        <Text className="text-lg font-medium">Product not found</Text>
+        <Pressable
+          onPress={() => router.back()}
+          className="mt-4 rounded-full bg-blue-500 px-6 py-2"
+        >
+          <Text className="text-white">Go Back</Text>
+        </Pressable>
+      </View>
+    );
+  }
 
   const handleAddToCart = () => {
-    // Add the product to the cart context
-    addToCart({
-      id: product.id,
-      name: product.name,
-      price: product.price,
-      image: product.image,
-      quantity: 1,
-      color: selectedColor,
-      size: selectedSize,
-    });
-
-    // Show animation
-    setAddedToCartAnimation(true);
-    setTimeout(() => {
-      setAddedToCartAnimation(false);
-    }, 2000);
-
-    // Update cart status
-    setIsInCart(true);
-  };
-
-  const toggleFavorite = () => {
-    setIsFavorite(!isFavorite);
+    addToCart(product);
   };
 
   return (
-    <View className="flex-1 bg-white">
+    <ScrollView className="flex-1 bg-white">
       {/* Header */}
-      <View className="bg-white pt-12 pb-4 px-4 flex-row justify-between items-center">
-        <Pressable onPress={() => router.back()} className="p-2">
-          <ArrowLeft size={24} color="#000" />
-        </Pressable>
-        <Text className="text-lg font-bold">Product Details</Text>
-        <Pressable onPress={toggleFavorite} className="p-2">
+      <View className="relative">
+        <Image
+          source={{ uri: product.image }}
+          className="h-96 w-full"
+          contentFit="cover"
+        />
+        <View className="absolute left-4 top-12 rounded-full bg-white/80 p-2">
+          <Pressable onPress={() => router.back()}>
+            <ArrowLeft size={24} color="#000" />
+          </Pressable>
+        </View>
+        <View className="absolute right-4 top-12 rounded-full bg-white/80 p-2">
           <Heart
             size={24}
-            color={isFavorite ? "#f43f5e" : "#000"}
-            fill={isFavorite ? "#f43f5e" : "none"}
+            color={product.isFavorite ? "#f43f5e" : "#000"}
+            fill={product.isFavorite ? "#f43f5e" : "transparent"}
           />
-        </Pressable>
+        </View>
       </View>
 
-      <ScrollView className="flex-1">
-        {/* Product Image */}
-        <View className="w-full h-[300px] bg-gray-100">
-          <Image
-            source={{ uri: product.image }}
-            className="w-full h-full"
-            contentFit="cover"
-          />
-        </View>
-
-        {/* Product Info */}
-        <View className="p-4">
-          <Text className="text-sm text-gray-500 mb-1">ID: {product.id}</Text>
-          <Text className="text-2xl font-bold mb-1">{product.name}</Text>
-          <View className="flex-row items-center mb-4">
-            <Text className="text-xl font-bold text-blue-600 mr-2">
-              ${product.price.toFixed(2)}
-            </Text>
-            {product.inStock ? (
-              <Text className="text-green-600 text-sm">In Stock</Text>
-            ) : (
-              <Text className="text-red-600 text-sm">Out of Stock</Text>
-            )}
-          </View>
-
-          {/* Rating */}
-          {product.rating > 0 && (
-            <View className="flex-row items-center mb-4">
-              <View className="flex-row">
-                {[1, 2, 3, 4, 5].map((star) => (
-                  <Text key={star} className="text-yellow-500 text-lg mr-1">
-                    {star <= Math.floor(product.rating) ? "★" : "☆"}
-                  </Text>
-                ))}
-              </View>
-              <Text className="text-gray-600 ml-2">
-                {product.rating.toFixed(1)} ({product.reviews} reviews)
-              </Text>
-            </View>
-          )}
-
-          {/* Description */}
-          <Text className="text-base text-gray-700 mb-6">
-            {product.description}
+      {/* Product Info */}
+      <View className="p-4">
+        <Text className="text-2xl font-bold text-gray-800">{product.name}</Text>
+        <View className="mt-1 flex-row items-center justify-between">
+          <Text className="text-xl font-bold text-blue-600">
+            ${product.price.toFixed(2)}
           </Text>
-
-          {/* Sizes if applicable */}
-          {product.sizes && product.sizes.length > 0 && (
-            <View className="mb-6">
-              <Text className="text-lg font-bold mb-2">Size</Text>
-              <View className="flex-row flex-wrap">
-                {product.sizes.map((size) => (
-                  <Pressable
-                    key={size}
-                    onPress={() => setSelectedSize(size)}
-                    className={`mr-3 mb-2 px-4 py-2 rounded-full border ${
-                      selectedSize === size
-                        ? "bg-blue-600 border-blue-600"
-                        : "border-gray-300"
-                    }`}
-                  >
-                    <Text
-                      className={`font-medium ${
-                        selectedSize === size ? "text-white" : "text-gray-700"
-                      }`}
-                    >
-                      {size}
-                    </Text>
-                  </Pressable>
-                ))}
-              </View>
-            </View>
-          )}
-
-          {/* Colors if applicable */}
-          {product.colors && product.colors.length > 0 && (
-            <View className="mb-6">
-              <Text className="text-lg font-bold mb-2">Color</Text>
-              <View className="flex-row flex-wrap">
-                {product.colors.map((color) => (
-                  <Pressable
-                    key={color}
-                    onPress={() => setSelectedColor(color)}
-                    className={`mr-3 mb-2 px-4 py-2 rounded-full border ${
-                      selectedColor === color
-                        ? "bg-blue-600 border-blue-600"
-                        : "border-gray-300"
-                    }`}
-                  >
-                    <Text
-                      className={`font-medium ${
-                        selectedColor === color ? "text-white" : "text-gray-700"
-                      }`}
-                    >
-                      {color}
-                    </Text>
-                  </Pressable>
-                ))}
-              </View>
-            </View>
-          )}
+          <View className="flex-row items-center">
+            <Text className="mr-1 text-sm text-gray-600">
+              {product.rating} ★
+            </Text>
+            <Text className="text-sm text-gray-500">
+              ({product.reviews} reviews)
+            </Text>
+          </View>
         </View>
-      </ScrollView>
 
-      {/* Add to Cart Button */}
-      <View className="p-4 border-t border-gray-200">
+        {/* Description */}
+        <View className="mt-4">
+          <Text className="text-lg font-semibold text-gray-800">
+            Description
+          </Text>
+          <Text className="mt-1 text-gray-600">{product.description}</Text>
+        </View>
+
+        {/* Colors */}
+        {product.colors.length > 0 && (
+          <View className="mt-4">
+            <Text className="text-lg font-semibold text-gray-800">Colors</Text>
+            <View className="mt-2 flex-row">
+              {product.colors.map((color) => (
+                <View
+                  key={color}
+                  className="mr-2 rounded-md border border-gray-300 px-3 py-1"
+                >
+                  <Text>{color}</Text>
+                </View>
+              ))}
+            </View>
+          </View>
+        )}
+
+        {/* Sizes */}
+        {product.sizes.length > 0 && (
+          <View className="mt-4">
+            <Text className="text-lg font-semibold text-gray-800">Sizes</Text>
+            <View className="mt-2 flex-row">
+              {product.sizes.map((size) => (
+                <View
+                  key={size}
+                  className="mr-2 rounded-md border border-gray-300 px-3 py-1"
+                >
+                  <Text>{size}</Text>
+                </View>
+              ))}
+            </View>
+          </View>
+        )}
+
+        {/* Add to Cart Button */}
         <Pressable
           onPress={handleAddToCart}
-          className={`py-3 rounded-lg flex-row justify-center items-center ${
-            addedToCartAnimation
-              ? "bg-green-600"
-              : isInCart
-              ? "bg-blue-800"
-              : "bg-blue-600"
-          }`}
+          className={`mt-6 flex-row items-center justify-center rounded-full p-3 ${isInCart(product.id) ? "bg-green-500" : "bg-blue-600"}`}
         >
-          {addedToCartAnimation ? (
+          {isInCart(product.id) ? (
             <>
               <Check size={20} color="#fff" />
-              <Text className="text-white font-bold ml-2">Added to Cart</Text>
-            </>
-          ) : isInCart ? (
-            <>
-              <ShoppingCart size={20} color="#fff" />
-              <Text className="text-white font-bold ml-2">Already in Cart</Text>
+              <Text className="ml-2 text-lg font-semibold text-white">
+                Added to Cart
+              </Text>
             </>
           ) : (
             <>
               <ShoppingCart size={20} color="#fff" />
-              <Text className="text-white font-bold ml-2">Add to Cart</Text>
+              <Text className="ml-2 text-lg font-semibold text-white">
+                Add to Cart
+              </Text>
             </>
           )}
         </Pressable>
       </View>
-    </View>
+    </ScrollView>
   );
-}
+};
+
+export default ProductDetail;

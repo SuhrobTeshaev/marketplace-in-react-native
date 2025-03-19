@@ -1,10 +1,11 @@
 import React from "react";
 import { View, Text, ScrollView, Switch, TouchableOpacity } from "react-native";
-import { Stack } from "expo-router";
+import { Stack, useRouter } from "expo-router";
 import Header from "./components/Header";
 import { Bell, Moon, Globe, Shield, HelpCircle } from "lucide-react-native";
 
 export default function SettingsScreen() {
+  const router = useRouter();
   const [notifications, setNotifications] = React.useState(true);
   const [darkMode, setDarkMode] = React.useState(false);
 
@@ -28,19 +29,21 @@ export default function SettingsScreen() {
             />
           </View>
 
-          <View className="flex-row items-center justify-between p-4 border-b border-gray-100">
+          <TouchableOpacity
+            className="flex-row items-center justify-between p-4 border-b border-gray-100"
+            onPress={() => router.push("/settings/theme")}
+          >
             <View className="flex-row items-center">
               <Moon size={20} color="#000" />
-              <Text className="text-base ml-3">Dark Mode</Text>
+              <Text className="text-base ml-3">Theme</Text>
             </View>
-            <Switch
-              value={darkMode}
-              onValueChange={setDarkMode}
-              trackColor={{ false: "#d1d5db", true: "#4f46e5" }}
-            />
-          </View>
+            <Text className="text-gray-500">{darkMode ? "Dark" : "Light"}</Text>
+          </TouchableOpacity>
 
-          <TouchableOpacity className="flex-row items-center justify-between p-4 border-b border-gray-100">
+          <TouchableOpacity
+            className="flex-row items-center justify-between p-4 border-b border-gray-100"
+            onPress={() => router.push("/settings/language")}
+          >
             <View className="flex-row items-center">
               <Globe size={20} color="#000" />
               <Text className="text-base ml-3">Language</Text>

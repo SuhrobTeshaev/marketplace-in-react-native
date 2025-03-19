@@ -114,12 +114,17 @@ const FeaturedProducts = ({
   const router = useRouter();
 
   return (
-    <View className="bg-gray-50 py-4 h-[300px]">
+    <View className="bg-gray-50 py-4">
       {/* Header */}
       <View className="flex-row justify-between items-center px-4 mb-3">
         <Text className="text-lg font-bold">{title}</Text>
         <Pressable onPress={onViewAllPress} className="flex-row items-center">
-          <Text className="text-blue-600 mr-1">{viewAllText}</Text>
+          <Text
+            className="text-blue-600 mr-1"
+            onPress={() => router.push("/all-products")}
+          >
+            {viewAllText}
+          </Text>
           <ChevronRight size={16} color="#2563eb" />
         </Pressable>
       </View>
@@ -152,6 +157,8 @@ const FeaturedProducts = ({
             price={product.price}
             image={product.image}
             isFavorite={product.isFavorite}
+            discount={product.discount}
+            discountEnds={product.discountEnds}
             onPress={() => router.push(`/product/${product.id}`)}
             onFavoritePress={() =>
               console.log(`Favorite ${product.id} toggled`)
