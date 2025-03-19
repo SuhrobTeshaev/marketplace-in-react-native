@@ -1,4 +1,5 @@
 import React, { createContext, useState, useContext, useEffect } from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 interface CartItem {
   id: string;
@@ -41,14 +42,10 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({
   useEffect(() => {
     const loadCart = async () => {
       try {
-        // In a real app, you would use AsyncStorage
-        // For now, we'll just simulate with a timeout
-        setTimeout(() => {
-          const savedCart = localStorage.getItem("cart");
-          if (savedCart) {
-            setCartItems(JSON.parse(savedCart));
-          }
-        }, 100);
+        const savedCart = await AsyncStorage.getItem("cart");
+        if (savedCart) {
+          setCartItems(JSON.parse(savedCart));
+        }
       } catch (error) {
         console.error("Failed to load cart from storage", error);
       }
@@ -59,19 +56,22 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({
 
   // Save cart to storage whenever it changes
   useEffect(() => {
-    try {
-      // In a real app, you would use AsyncStorage
-      localStorage.setItem("cart", JSON.stringify(cartItems));
-    } catch (error) {
-      console.error("Failed to save cart to storage", error);
-    }
+    const saveCart = async () => {
+      try {
+        await AsyncStorage.setItem("cart", JSON.stringify(cartItems));
+      } catch (error) {
+        console.error("Failed to save cart to storage", error);
+      }
+    };
+
+    saveCart();
   }, [cartItems]);
 
   const addToCart = (item: CartItem) => {
     setCartItems((prevItems) => {
       // Check if item already exists in cart
       const existingItemIndex = prevItems.findIndex(
-        (cartItem) => cartItem.id === item.id,
+        (cartItem) => cartItem.id === item.id
       );
 
       if (existingItemIndex >= 0) {
@@ -98,7 +98,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({
     if (quantity < 1) return;
 
     setCartItems((prevItems) =>
-      prevItems.map((item) => (item.id === id ? { ...item, quantity } : item)),
+      prevItems.map((item) => (item.id === id ? { ...item, quantity } : item))
     );
   };
 

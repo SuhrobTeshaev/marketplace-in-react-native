@@ -7,6 +7,7 @@ import CategoryNav from "./components/CategoryNav";
 import FeaturedProducts from "./components/FeaturedProducts";
 import PopularProducts from "./components/PopularProducts";
 import { useCart } from "./context/CartContext";
+import { router } from "expo-router";
 
 export default function HomeScreen() {
   const insets = useSafeAreaInsets();

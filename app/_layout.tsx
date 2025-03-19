@@ -1,3 +1,4 @@
+import React from "react";
 import { DefaultTheme, ThemeProvider } from "@react-navigation/native";
 import { useFonts } from "expo-font";
 import { Stack } from "expo-router";
@@ -38,7 +39,7 @@ export default function RootLayout() {
     <ThemeProvider value={DefaultTheme}>
       <CartProvider>
         <Stack
-          screenOptions={({ route }) => ({
+          screenOptions={({ route }: { route: any }) => ({
             headerShown: !route.name.startsWith("tempobook"),
           })}
         >

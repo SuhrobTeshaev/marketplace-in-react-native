@@ -46,42 +46,42 @@ const Header = ({
     setMenuVisible(!menuVisible);
   };
 
-  const navigateTo = (route: string) => {
+  const navigateTo = (route:any) => {
     setMenuVisible(false);
     router.push(route);
   };
 
   const menuItems = [
-    { icon: <Home size={20} color="#000" />, label: "Home", route: "/" },
+    { icon: <Home size={20} color="#000" />, label: "Home", route: "/" as const },
     {
       icon: <Package size={20} color="#000" />,
       label: "Categories",
-      route: "/categories",
+      route: "/categories" as const,
     },
     {
       icon: <Heart size={20} color="#000" />,
       label: "Favorites",
-      route: "/favorites",
+      route: "/favorites" as const,
     },
     {
       icon: <ShoppingCart size={20} color="#000" />,
       label: "Cart",
-      route: "/cart",
+      route: "/cart" as const,
     },
     {
       icon: <User size={20} color="#000" />,
       label: "Profile",
-      route: "/profile",
+      route: "/profile" as const,
     },
     {
       icon: <Settings size={20} color="#000" />,
       label: "Settings",
-      route: "/settings",
+      route: "/settings" as const,
     },
     {
       icon: <HelpCircle size={20} color="#000" />,
       label: "Help",
-      route: "/help",
+      route: "/help" as const,
     },
   ];
 

@@ -5,8 +5,23 @@ import { useLocalSearchParams, useRouter } from "expo-router";
 import { ArrowLeft, Heart, ShoppingCart, Check } from "lucide-react-native";
 import { useCart } from "../context/CartContext";
 
+// Define product type
+type Product = {
+  id: string;
+  name: string;
+  price: number;
+  image: string;
+  isFavorite: boolean;
+  description: string;
+  sizes: string[];
+  colors: string[];
+  inStock: boolean;
+  rating: number;
+  reviews: number;
+};
+
 // Sample product data - in a real app, this would come from an API
-const productData = {
+const productData: { [key: string]: Product } = {
   "1": {
     id: "1",
     name: "Wireless Noise Cancelling Headphones",
@@ -305,7 +320,7 @@ const productData = {
     colors: ["Black", "White", "Walnut"],
     inStock: true,
     rating: 4.3,
-    reviews: 145,
+    reviews: 156,
   },
 };
 
@@ -320,7 +335,7 @@ export default function ProductDetail() {
   const [addedToCartAnimation, setAddedToCartAnimation] = React.useState(false);
 
   // Get product data based on ID
-  const product = productData[id as string] || {
+  const product: Product = productData[id as string] || {
     id: "unknown",
     name: "Product Not Found",
     price: 0,
@@ -433,10 +448,16 @@ export default function ProductDetail() {
                   <Pressable
                     key={size}
                     onPress={() => setSelectedSize(size)}
-                    className={`mr-3 mb-2 px-4 py-2 rounded-full border ${selectedSize === size ? "bg-blue-600 border-blue-600" : "border-gray-300"}`}
+                    className={`mr-3 mb-2 px-4 py-2 rounded-full border ${
+                      selectedSize === size
+                        ? "bg-blue-600 border-blue-600"
+                        : "border-gray-300"
+                    }`}
                   >
                     <Text
-                      className={`font-medium ${selectedSize === size ? "text-white" : "text-gray-700"}`}
+                      className={`font-medium ${
+                        selectedSize === size ? "text-white" : "text-gray-700"
+                      }`}
                     >
                       {size}
                     </Text>
@@ -455,10 +476,16 @@ export default function ProductDetail() {
                   <Pressable
                     key={color}
                     onPress={() => setSelectedColor(color)}
-                    className={`mr-3 mb-2 px-4 py-2 rounded-full border ${selectedColor === color ? "bg-blue-600 border-blue-600" : "border-gray-300"}`}
+                    className={`mr-3 mb-2 px-4 py-2 rounded-full border ${
+                      selectedColor === color
+                        ? "bg-blue-600 border-blue-600"
+                        : "border-gray-300"
+                    }`}
                   >
                     <Text
-                      className={`font-medium ${selectedColor === color ? "text-white" : "text-gray-700"}`}
+                      className={`font-medium ${
+                        selectedColor === color ? "text-white" : "text-gray-700"
+                      }`}
                     >
                       {color}
                     </Text>
@@ -474,7 +501,13 @@ export default function ProductDetail() {
       <View className="p-4 border-t border-gray-200">
         <Pressable
           onPress={handleAddToCart}
-          className={`py-3 rounded-lg flex-row justify-center items-center ${addedToCartAnimation ? "bg-green-600" : isInCart ? "bg-blue-800" : "bg-blue-600"}`}
+          className={`py-3 rounded-lg flex-row justify-center items-center ${
+            addedToCartAnimation
+              ? "bg-green-600"
+              : isInCart
+              ? "bg-blue-800"
+              : "bg-blue-600"
+          }`}
         >
           {addedToCartAnimation ? (
             <>

@@ -13,14 +13,24 @@ import { ArrowLeft } from "lucide-react-native";
 import ProductCard from "./components/ProductCard";
 import { useCart } from "./context/CartContext";
 
+// Define product type
+type Product = {
+  id: string;
+  name: string;
+  price: number;
+  image: string;
+  isFavorite: boolean;
+  category: string;
+};
+
 export default function AllProductsScreen() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
   const { title = "All Products" } = useLocalSearchParams();
   const { getCartItemCount } = useCart();
 
-  const [products, setProducts] = useState([]);
-  const [displayedProducts, setDisplayedProducts] = useState([]);
+  const [products, setProducts] = useState<Product[]>([]);
+  const [displayedProducts, setDisplayedProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
@@ -28,7 +38,7 @@ export default function AllProductsScreen() {
   const PRODUCTS_PER_PAGE = 20; // 2 columns x 10 rows
 
   // All products data with categories (same as in index.tsx)
-  const allProducts = [
+  const allProducts: Product[] = [
     {
       id: "1",
       name: "Wireless Noise Cancelling Headphones",
@@ -303,7 +313,10 @@ export default function AllProductsScreen() {
     setLoading(false);
   }, []);
 
-  const loadMoreProducts = (pageNum, productsList = products) => {
+  const loadMoreProducts = (
+    pageNum: number,
+    productsList: Product[] = products
+  ) => {
     const start = (pageNum - 1) * PRODUCTS_PER_PAGE;
     const end = start + PRODUCTS_PER_PAGE;
 
@@ -330,11 +343,11 @@ export default function AllProductsScreen() {
     }
   };
 
-  const handleProductPress = (productId) => {
+  const handleProductPress = (productId: string) => {
     router.push(`/product/${productId}`);
   };
 
-  const handleFavoritePress = (productId) => {
+  const handleFavoritePress = (productId: string) => {
     // Toggle favorite status
     console.log("Favorite toggled for product:", productId);
   };
