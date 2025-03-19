@@ -136,6 +136,8 @@ const PopularProducts = ({
             price={product.price}
             image={product.image}
             isFavorite={product.isFavorite}
+            discount={product.discount}
+            discountEnds={product.discountEnds}
             onPress={() => router.push(`/product/${product.id}`)}
             onFavoritePress={() => onFavoritePress(product.id)}
           />

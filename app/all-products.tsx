@@ -37,6 +37,8 @@ export default function AllProductsScreen() {
         "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=300&q=80",
       isFavorite: true,
       category: "5", // Audio
+      discount: 15,
+      discountEnds: new Date(new Date().getTime() + 48 * 60 * 60 * 1000),
     },
     {
       id: "2",
@@ -55,6 +57,8 @@ export default function AllProductsScreen() {
         "https://images.unsplash.com/photo-1608043152269-423dbba4e7e1?w=300&q=80",
       isFavorite: false,
       category: "5", // Audio
+      discount: 20,
+      discountEnds: new Date(new Date().getTime() + 24 * 60 * 60 * 1000),
     },
     {
       id: "4",
@@ -100,6 +104,7 @@ export default function AllProductsScreen() {
         "https://images.unsplash.com/photo-1606220588913-b3aacb4d2f46?w=300&q=80",
       isFavorite: true,
       category: "5", // Audio
+      discount: 25,
     },
     {
       id: "9",
@@ -247,6 +252,8 @@ export default function AllProductsScreen() {
         "https://images.unsplash.com/photo-1558002038-1055e2e28ed1?w=300&q=80",
       isFavorite: false,
       category: "8", // Deals
+      discount: 30,
+      discountEnds: new Date(new Date().getTime() + 72 * 60 * 60 * 1000),
     },
     // TVs
     {
@@ -292,7 +299,8 @@ export default function AllProductsScreen() {
 
   useEffect(() => {
     // Get products from params or use all products
-    const { categoryId } = useLocalSearchParams();
+    const params = useLocalSearchParams();
+    const categoryId = params.categoryId;
     const filteredProducts =
       categoryId && categoryId !== "1"
         ? allProducts.filter((product) => product.category === categoryId)
@@ -396,6 +404,8 @@ export default function AllProductsScreen() {
                 price={item.price}
                 image={item.image}
                 isFavorite={item.isFavorite}
+                discount={item.discount}
+                discountEnds={item.discountEnds}
                 onPress={() => handleProductPress(item.id)}
                 onFavoritePress={() => handleFavoritePress(item.id)}
               />

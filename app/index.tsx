@@ -1,6 +1,7 @@
 import React from "react";
 import { View, Text, ScrollView, StatusBar, SafeAreaView } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { useRouter } from "expo-router";
 
 import Header from "./components/Header";
 import CategoryNav from "./components/CategoryNav";
@@ -10,13 +11,15 @@ import { useCart } from "./context/CartContext";
 
 export default function HomeScreen() {
   const insets = useSafeAreaInsets();
+  const router = useRouter();
   const { getCartItemCount } = useCart();
   const cartItemCount = getCartItemCount();
   const [favoritesCount, setFavoritesCount] = React.useState(3);
 
+  const [searchQuery, setSearchQuery] = React.useState("");
+
   const handleSearch = (text: string) => {
-    console.log("Searching for:", text);
-    // Implement search functionality
+    setSearchQuery(text);
   };
 
   const [selectedCategory, setSelectedCategory] = React.useState("1");
@@ -55,6 +58,8 @@ export default function HomeScreen() {
         "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=300&q=80",
       isFavorite: true,
       category: "5", // Audio
+      discount: 15,
+      discountEnds: new Date(new Date().getTime() + 48 * 60 * 60 * 1000),
     },
     {
       id: "2",
@@ -73,6 +78,8 @@ export default function HomeScreen() {
         "https://images.unsplash.com/photo-1608043152269-423dbba4e7e1?w=300&q=80",
       isFavorite: false,
       category: "5", // Audio
+      discount: 20,
+      discountEnds: new Date(new Date().getTime() + 24 * 60 * 60 * 1000),
     },
     {
       id: "4",
@@ -118,6 +125,7 @@ export default function HomeScreen() {
         "https://images.unsplash.com/photo-1606220588913-b3aacb4d2f46?w=300&q=80",
       isFavorite: true,
       category: "5", // Audio
+      discount: 25,
     },
     {
       id: "9",
@@ -265,6 +273,8 @@ export default function HomeScreen() {
         "https://images.unsplash.com/photo-1558002038-1055e2e28ed1?w=300&q=80",
       isFavorite: false,
       category: "8", // Deals
+      discount: 30,
+      discountEnds: new Date(new Date().getTime() + 72 * 60 * 60 * 1000),
     },
     // TVs
     {
@@ -308,11 +318,42 @@ export default function HomeScreen() {
     },
   ];
 
-  // Filter products based on selected category
-  const filteredProducts =
-    selectedCategory === "1"
-      ? allProducts // Show all products when "All" category is selected
-      : allProducts.filter((product) => product.category === selectedCategory);
+  // Filter products based on selected category and search query
+  const filteredProducts = allProducts.filter((product) => {
+    // Filter by category
+    const matchesCategory =
+      selectedCategory === "1" || product.category === selectedCategory;
+
+    // Filter by search query
+    const matchesSearch =
+      searchQuery === "" ||
+      product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      getCategoryName(product.category)
+        .toLowerCase()
+        .includes(searchQuery.toLowerCase());
+
+    return matchesCategory && matchesSearch;
+  });
+
+  function getCategoryName(categoryId) {
+    const categories = {
+      "1": "All",
+      "2": "Fashion",
+      "3": "Watches",
+      "4": "Electronics",
+      "5": "Audio",
+      "6": "Gifts",
+      "7": "Home",
+      "8": "Deals",
+      "9": "Laptops",
+      "10": "Cameras",
+      "11": "TVs",
+      "12": "Books",
+      "13": "Kitchen",
+      "14": "Gaming",
+    };
+    return categories[categoryId] || "";
+  }
 
   // Split filtered products into featured and popular
   const featuredProducts = filteredProducts.slice(

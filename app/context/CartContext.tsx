@@ -44,9 +44,16 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({
         // In a real app, you would use AsyncStorage
         // For now, we'll just simulate with a timeout
         setTimeout(() => {
-          const savedCart = localStorage.getItem("cart");
-          if (savedCart) {
-            setCartItems(JSON.parse(savedCart));
+          try {
+            const savedCart =
+              typeof localStorage !== "undefined"
+                ? localStorage.getItem("cart")
+                : null;
+            if (savedCart) {
+              setCartItems(JSON.parse(savedCart));
+            }
+          } catch (e) {
+            console.log("localStorage not available");
           }
         }, 100);
       } catch (error) {
@@ -61,7 +68,9 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({
   useEffect(() => {
     try {
       // In a real app, you would use AsyncStorage
-      localStorage.setItem("cart", JSON.stringify(cartItems));
+      if (typeof localStorage !== "undefined") {
+        localStorage.setItem("cart", JSON.stringify(cartItems));
+      }
     } catch (error) {
       console.error("Failed to save cart to storage", error);
     }
