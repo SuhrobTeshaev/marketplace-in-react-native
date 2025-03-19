@@ -16,11 +16,11 @@ export default function FavoritesScreen() {
   const router = useRouter();
   const { favorites, removeFromFavorites } = useFavorites();
 
-  const handleRemoveFavorite = (productId) => {
-    removeFromFavorites(productId);
+  const handleRemoveFavorite = (productId: string | number) => {
+    removeFromFavorites(productId.toString());
   };
 
-  const handleProductPress = (productId) => {
+  const handleProductPress = (productId: string | number) => {
     router.push(`/product/${productId}`);
   };
 

@@ -60,7 +60,7 @@ export default function HomeScreen() {
       isFavorite: true,
       category: "5", // Audio
       discount: 15,
-      discountEnds: new Date(new Date().getTime() + 48 * 60 * 60 * 1000),
+      discountEnds: new Date(new Date().getTime() + 48 * 60 * 60 * 1000).toISOString(),
     },
     {
       id: "2",
@@ -80,7 +80,7 @@ export default function HomeScreen() {
       isFavorite: false,
       category: "5", // Audio
       discount: 20,
-      discountEnds: new Date(new Date().getTime() + 24 * 60 * 60 * 1000),
+      discountEnds: new Date(new Date().getTime() + 24 * 60 * 60 * 1000).toISOString(),
     },
     {
       id: "4",
@@ -275,7 +275,7 @@ export default function HomeScreen() {
       isFavorite: false,
       category: "8", // Deals
       discount: 30,
-      discountEnds: new Date(new Date().getTime() + 72 * 60 * 60 * 1000),
+      discountEnds: new Date(new Date().getTime() + 72 * 60 * 60 * 1000).toISOString(),
     },
     // TVs
     {
@@ -336,8 +336,8 @@ export default function HomeScreen() {
     return matchesCategory && matchesSearch;
   });
 
-  function getCategoryName(categoryId) {
-    const categories = {
+  function getCategoryName(categoryId: string) {
+    const categories: { [key: string]: string } = {
       "1": "All",
       "2": "Fashion",
       "3": "Watches",

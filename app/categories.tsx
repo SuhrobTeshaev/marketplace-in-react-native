@@ -97,7 +97,7 @@ export default function CategoriesScreen() {
     },
   ];
 
-  const handleCategorySelect = (categoryId) => {
+  const handleCategorySelect = (categoryId: string) => {
     setSelectedCategory(categoryId);
     router.push(`/all-products?categoryId=${categoryId}`);
   };
@@ -106,7 +106,7 @@ export default function CategoriesScreen() {
     <View className="flex-1 bg-white">
       <Stack.Screen options={{ headerShown: false }} />
       <Header />
-      <ScrollView className="flex-1 p-4">
+      <View className="flex-1 p-4">
         <Text className="text-2xl font-bold mb-4">Categories</Text>
         <CategoryNav onSelectCategory={handleCategorySelect} />
 
@@ -134,7 +134,7 @@ export default function CategoriesScreen() {
             </TouchableOpacity>
           )}
         />
-      </ScrollView>
+      </View>
     </View>
   );
 }

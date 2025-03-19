@@ -1,8 +1,9 @@
 import React from "react";
-import { View, Text, ScrollView, Pressable } from "react-native";
+import { View, Text, FlatList, ScrollView, Pressable } from "react-native";
 import { ArrowRight } from "lucide-react-native";
 import { useRouter } from "expo-router";
 import ProductCard from "./ProductCard";
+
 
 interface PopularProductsProps {
   title?: string;
@@ -13,6 +14,8 @@ interface PopularProductsProps {
     price: number;
     image: string;
     isFavorite: boolean;
+    discount?: number;
+    discountEnds?: string;
   }>;
   onViewAllPress?: () => void;
   onProductPress?: (productId: string) => void;
@@ -27,8 +30,9 @@ const PopularProducts = ({
       id: "11",
       name: "Minimalist Desk Lamp",
       price: 59.99,
-      image:
-        "https://images.unsplash.com/photo-1507473885765-e6ed057f782c?w=300&q=80",
+      image: "https://images.unsplash.com/photo-1580480055273-228ff5388ef8?w=300&q=80",
+      discount: 10,
+      discountEnds: "2023-12-31",
       isFavorite: true,
     },
     {
@@ -111,7 +115,48 @@ const PopularProducts = ({
   const router = useRouter();
 
   return (
-    <View className="bg-gray-50 py-4 px-2 h-[350px]">
+    // <View className="bg-gray-50 py-4 px-2 h-[350px]">
+    //   <View className="flex-row justify-between items-center mb-4 px-2">
+    //     <Text className="text-xl font-bold text-gray-800">{title}</Text>
+    //     <Pressable
+    //       onPress={() => router.push("/all-products")}
+    //       className="flex-row items-center"
+    //     >
+    //       <Text className="text-blue-600 mr-1">{viewAllText}</Text>
+    //       <ArrowRight size={16} color="#2563eb" />
+    //     </Pressable>
+    //   </View>
+
+    //   <ScrollView
+
+    //     showsHorizontalScrollIndicator={false}
+    //     contentContainerStyle={{ paddingHorizontal: 12 }}
+    //   >
+    //     {products.map((product, index) => (
+    //       // <View
+    //       //   key={product.id}
+    //       //   style={{ marginRight: index === products.length - 1 ? 0 : 10 }}
+    //       // >
+    //         <ProductCard
+    //           id={product.id}
+    //           name={product.name}
+    //           price={product.price}
+    //           image={product.image}
+    //           isFavorite={product.isFavorite}
+    //           discount={product.discount}
+    //           discountEnds={
+    //             product.discountEnds
+    //               ? new Date(product.discountEnds)
+    //               : undefined
+    //           }
+    //           onPress={() => router.push(`/product/${product.id}`)}
+    //           onFavoritePress={() => onFavoritePress(product.id)}
+    //         />
+    //       // </View>
+    //     ))}
+    //   </ScrollView>
+    // </View>
+    <View className="bg-gray-50 py-4 px-2 h-[450px]">
       <View className="flex-row justify-between items-center mb-4 px-2">
         <Text className="text-xl font-bold text-gray-800">{title}</Text>
         <Pressable
@@ -123,26 +168,30 @@ const PopularProducts = ({
         </Pressable>
       </View>
 
-      <ScrollView
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        contentContainerStyle={{ paddingHorizontal: 6 }}
-      >
-        {products.map((product) => (
-          <ProductCard
-            key={product.id}
-            id={product.id}
-            name={product.name}
-            price={product.price}
-            image={product.image}
-            isFavorite={product.isFavorite}
-            discount={product.discount}
-            discountEnds={product.discountEnds}
-            onPress={() => router.push(`/product/${product.id}`)}
-            onFavoritePress={() => onFavoritePress(product.id)}
-          />
-        ))}
-      </ScrollView>
+      <FlatList
+        data={products}
+        renderItem={({ item }) => (
+          <View style={{ flex: 1, margin: 5 }}>
+            <ProductCard
+              id={item.id}
+              name={item.name}
+              price={item.price}
+              image={item.image}
+              isFavorite={item.isFavorite}
+              discount={item.discount}
+              discountEnds={
+                item.discountEnds ? new Date(item.discountEnds) : undefined
+              }
+              onPress={() => router.push(`/product/${item.id}`)}
+              onFavoritePress={() => onFavoritePress(item.id)}
+            />
+          </View>
+        )}
+        keyExtractor={(item) => item.id}
+        numColumns={2}
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={{ paddingHorizontal: 12 }}
+      />
     </View>
   );
 };

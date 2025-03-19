@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -30,10 +30,12 @@ import { useFavorites } from "../context/FavoritesContext";
 
 interface HeaderProps {
   onSearch?: (text: string) => void;
+  favoritesCount?: number;
 }
 
 const Header = ({
   onSearch = (text) => console.log("Searching for:", text),
+  favoritesCount,
 }: HeaderProps) => {
   const router = useRouter();
   const { getCartItemCount } = useCart();
@@ -42,8 +44,11 @@ const Header = ({
   const { isAuthenticated } = useAuth();
   const { getFavoritesCount } = useFavorites();
 
+  useEffect(() => {
+    console.log("favoritesCount:", favoritesCount);
+  }, [favoritesCount]);
+
   const cartItemCount = getCartItemCount();
-  const favoritesCount = getFavoritesCount();
   const [searchText, setSearchText] = useState("");
   const [menuVisible, setMenuVisible] = useState(false);
 
@@ -60,7 +65,7 @@ const Header = ({
     setMenuVisible(!menuVisible);
   };
 
-  const navigateTo = (route:any) => {
+  const navigateTo = (route: any) => {
     setMenuVisible(false);
     router.push(route);
   };
@@ -113,7 +118,9 @@ const Header = ({
 
   return (
     <View
-      className={`w-full px-4 pt-12 pb-2 border-b shadow-sm ${isDarkMode ? "bg-gray-900 border-gray-800" : "bg-white border-gray-200"}`}
+      className={`w-full px-4 py-6 border-b shadow-sm ${
+        isDarkMode ? "bg-gray-900 border-gray-800" : "bg-white border-gray-200"
+      }`}
     >
       <Modal
         animationType="slide"
@@ -123,13 +130,19 @@ const Header = ({
       >
         <View className="flex-1 bg-black/50">
           <View
-            className={`h-full w-3/4 shadow-lg ${isDarkMode ? "bg-gray-900" : "bg-white"}`}
+            className={`h-full w-3/4 shadow-lg ${
+              isDarkMode ? "bg-gray-900" : "bg-white"
+            }`}
           >
             <View
-              className={`flex-row justify-between items-center p-4 border-b ${isDarkMode ? "border-gray-800" : "border-gray-200"}`}
+              className={`flex-row justify-between items-center p-4 border-b ${
+                isDarkMode ? "border-gray-800" : "border-gray-200"
+              }`}
             >
               <Text
-                className={`text-xl font-bold ${isDarkMode ? "text-white" : "text-black"}`}
+                className={`text-xl font-bold ${
+                  isDarkMode ? "text-white" : "text-black"
+                }`}
               >
                 Menu
               </Text>
@@ -141,12 +154,18 @@ const Header = ({
               {menuItems.map((item, index) => (
                 <Pressable
                   key={index}
-                  className={`flex-row items-center p-4 border-b ${isDarkMode ? "border-gray-800 active:bg-gray-800" : "border-gray-100 active:bg-gray-100"}`}
+                  className={`flex-row items-center p-4 border-b ${
+                    isDarkMode
+                      ? "border-gray-800 active:bg-gray-800"
+                      : "border-gray-100 active:bg-gray-100"
+                  }`}
                   onPress={() => navigateTo(item.route)}
                 >
                   <View className="mr-3">{item.icon}</View>
                   <Text
-                    className={`text-base ${isDarkMode ? "text-white" : "text-black"}`}
+                    className={`text-base ${
+                      isDarkMode ? "text-white" : "text-black"
+                    }`}
                   >
                     {item.label}
                   </Text>
@@ -167,9 +186,11 @@ const Header = ({
         </TouchableOpacity>
 
         <Text
-          className={`text-xl font-bold ${isDarkMode ? "text-white" : "text-black"}`}
+          className={`text-xl font-bold ${
+            isDarkMode ? "text-white" : "text-black"
+          }`}
         >
-          ShopApp
+          Zanbur
         </Text>
 
         <View className="flex-row">
@@ -178,7 +199,7 @@ const Header = ({
             onPress={() => router.push("/favorites")}
           >
             <Heart size={24} color={isDarkMode ? "#fff" : "#000"} />
-            {favoritesCount > 0 && (
+            {favoritesCount && favoritesCount > 0 && (
               <View className="absolute -top-2 -right-2 bg-red-500 rounded-full w-5 h-5 items-center justify-center">
                 <Text className="text-white text-xs font-bold">
                   {favoritesCount}
@@ -204,11 +225,15 @@ const Header = ({
       </View>
 
       <View
-        className={`flex-row items-center rounded-full px-3 py-2 ${isDarkMode ? "bg-gray-800" : "bg-gray-100"}`}
+        className={`flex-row items-center rounded-full px-3 py-2 ${
+          isDarkMode ? "bg-gray-800" : "bg-gray-100"
+        }`}
       >
         <Search size={20} color="#6b7280" />
         <TextInput
-          className={`flex-1 ml-2 text-base ${isDarkMode ? "text-white" : "text-black"}`}
+          className={`flex-1 ml-2 text-base ${
+            isDarkMode ? "text-white" : "text-black"
+          }`}
           placeholder={t("search")}
           placeholderTextColor="#6b7280"
           value={searchText}

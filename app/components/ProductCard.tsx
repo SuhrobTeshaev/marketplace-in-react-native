@@ -31,6 +31,7 @@ const ProductCard = ({
   onFavoritePress,
 }: ProductCardProps) => {
   const [timeLeft, setTimeLeft] = useState("");
+  const [isItemFavorite, setIsItemFavorite] = useState(isFavorite);
   const { isAuthenticated } = useAuth();
   const {
     addToFavorites,
@@ -39,9 +40,6 @@ const ProductCard = ({
   } = useFavorites();
   const { isDarkMode } = useTheme();
   const router = useRouter();
-
-  // Use context-based favorite state if onFavoritePress is not provided
-  const isItemFavorite = onFavoritePress ? isFavorite : checkIsFavorite(id);
 
   useEffect(() => {
     if (!discountEnds) return;
@@ -52,7 +50,7 @@ const ProductCard = ({
       if (difference <= 0) return "";
 
       const hours = Math.floor(
-        (difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60),
+        (difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
       );
       const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
       return `${hours}h ${minutes}m`;
@@ -76,13 +74,14 @@ const ProductCard = ({
         [
           { text: "Cancel", style: "cancel" },
           { text: "Sign In", onPress: () => router.push("/login") },
-        ],
+        ]
       );
       return;
     }
 
     if (isItemFavorite) {
       removeFromFavorites(id);
+      setIsItemFavorite(false);
     } else {
       addToFavorites({
         id,
@@ -92,13 +91,16 @@ const ProductCard = ({
         discount,
         discountEnds,
       });
+      setIsItemFavorite(true);
     }
   };
 
   return (
     <Pressable
       onPress={onPress}
-      className={`rounded-lg overflow-hidden shadow-sm w-full ${isDarkMode ? "bg-gray-800" : "bg-white"}`}
+      className={`rounded-lg overflow-hidden shadow-sm w-[160px] mx-2 my-2  ${
+        isDarkMode ? "bg-gray-800" : "bg-white"
+      }`}
     >
       <View className="relative">
         <Image
@@ -108,7 +110,9 @@ const ProductCard = ({
         />
         <Pressable
           onPress={handleFavoritePress}
-          className={`absolute top-2 right-2 p-2 rounded-full ${isDarkMode ? "bg-gray-800/80" : "bg-white/80"}`}
+          className={`absolute top-2 right-2 p-2 rounded-full ${
+            isDarkMode ? "bg-gray-800/80" : "bg-white/80"
+          }`}
         >
           <Heart
             size={22}
@@ -122,12 +126,16 @@ const ProductCard = ({
 
       <View className="p-3">
         <Text
-          className={`text-sm ${isDarkMode ? "text-gray-400" : "text-gray-500"} mb-1`}
+          className={`text-sm ${
+            isDarkMode ? "text-gray-400" : "text-gray-500"
+          } mb-1`}
         >
           {id}
         </Text>
         <Text
-          className={`font-medium text-base mb-1 ${isDarkMode ? "text-white" : "text-black"}`}
+          className={`font-medium text-base mb-1 ${
+            isDarkMode ? "text-white" : "text-black"
+          }`}
           numberOfLines={2}
         >
           {name}
@@ -139,7 +147,9 @@ const ProductCard = ({
                 ${(price * (1 - discount / 100)).toFixed(2)}
               </Text>
               <Text
-                className={`text-sm ${isDarkMode ? "text-gray-400" : "text-gray-500"} line-through`}
+                className={`text-sm ${
+                  isDarkMode ? "text-gray-400" : "text-gray-500"
+                } line-through`}
               >
                 ${price.toFixed(2)}
               </Text>

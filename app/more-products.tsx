@@ -128,11 +128,11 @@ export default function MoreProductsScreen() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
 
-  const handleProductPress = (productId) => {
+  const handleProductPress = (productId: string) => {
     router.push(`/product/${productId}`);
   };
 
-  const handleFavoritePress = (productId) => {
+  const handleFavoritePress = (productId: string) => {
     console.log("Favorite toggled for product:", productId);
   };
 

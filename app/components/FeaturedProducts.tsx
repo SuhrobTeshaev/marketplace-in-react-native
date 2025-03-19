@@ -18,6 +18,8 @@ interface FeaturedProductsProps {
     price: number;
     image: string;
     isFavorite: boolean;
+    discount?: number;
+    discountEnds?: string;
   }>;
 }
 
@@ -33,16 +35,18 @@ const FeaturedProducts = ({
       id: "1",
       name: "Wireless Noise Cancelling Headphones",
       price: 249.99,
-      image:
-        "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=300&q=80",
+      image: "https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?w=800&q=80",
+      discount: 10,
+      discountEnds: "2023-12-31",
       isFavorite: true,
     },
     {
       id: "2",
-      name: "Smart Watch Series 7",
-      price: 399.99,
-      image:
-        "https://images.unsplash.com/photo-1546868871-7041f2a55e12?w=300&q=80",
+      name: "Product Name 2",
+      price: 199.99,
+      image: "https://images.unsplash.com/photo-1546868871-7041f2a55e12?w=300&q=80",
+      discount: 15,
+      discountEnds: "2023-11-30",
       isFavorite: false,
     },
     {
@@ -114,7 +118,7 @@ const FeaturedProducts = ({
   const router = useRouter();
 
   return (
-    <View className="bg-gray-50 py-4">
+    <View className="bg-gray-50 py-4 ">
       {/* Header */}
       <View className="flex-row justify-between items-center px-4 mb-3">
         <Text className="text-lg font-bold">{title}</Text>
@@ -158,7 +162,7 @@ const FeaturedProducts = ({
             image={product.image}
             isFavorite={product.isFavorite}
             discount={product.discount}
-            discountEnds={product.discountEnds}
+            discountEnds={product.discountEnds ? new Date(product.discountEnds) : undefined}
             onPress={() => router.push(`/product/${product.id}`)}
             onFavoritePress={() =>
               console.log(`Favorite ${product.id} toggled`)
