@@ -225,7 +225,7 @@ const ProductDetail = () => {
   }
 
   const handleAddToCart = () => {
-    addToCart(product);
+    addToCart({ ...product, quantity: 1 });
   };
 
   return (

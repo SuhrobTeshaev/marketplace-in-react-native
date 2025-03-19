@@ -21,6 +21,8 @@ type Product = {
   image: string;
   isFavorite: boolean;
   category: string;
+  discount?: number;
+  discountEnds?: Date;
 };
 
 export default function AllProductsScreen() {
