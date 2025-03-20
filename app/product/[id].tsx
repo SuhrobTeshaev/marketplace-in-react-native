@@ -1,9 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
 import { View, Text, ScrollView, Pressable } from "react-native";
 import { Image } from "expo-image";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { ArrowLeft, Heart, ShoppingCart, Check } from "lucide-react-native";
 import { useCart } from "../context/CartContext";
+import { useFavorites } from "../context/FavoritesContext";
 
 // Sample product data - in a real app, this would come from an API
 const productData = {
@@ -193,7 +194,11 @@ const ProductDetail = () => {
   const { id } = useLocalSearchParams();
   const router = useRouter();
   const { addToCart, isInCart } = useCart();
+  const { addToFavorites, removeFromFavorites, isFavorite } = useFavorites();
   const product = productData[id as string];
+  const [isFavoriteState, setIsFavoriteState] = useState(
+    product?.isFavorite || false,
+  );
 
   if (!product) {
     return (
@@ -213,6 +218,22 @@ const ProductDetail = () => {
     addToCart(product);
   };
 
+  const handleToggleFavorite = () => {
+    const newState = !isFavoriteState;
+    setIsFavoriteState(newState);
+
+    if (newState) {
+      addToFavorites({
+        id: product.id,
+        name: product.name,
+        price: product.price,
+        image: product.image,
+      });
+    } else {
+      removeFromFavorites(product.id);
+    }
+  };
+
   return (
     <ScrollView className="flex-1 bg-white">
       {/* Header */}
@@ -227,13 +248,16 @@ const ProductDetail = () => {
             <ArrowLeft size={24} color="#000" />
           </Pressable>
         </View>
-        <View className="absolute right-4 top-12 rounded-full bg-white/80 p-2">
+        <Pressable
+          onPress={handleToggleFavorite}
+          className="absolute right-4 top-12 rounded-full bg-white/80 p-2"
+        >
           <Heart
             size={24}
-            color={product.isFavorite ? "#f43f5e" : "#000"}
-            fill={product.isFavorite ? "#f43f5e" : "transparent"}
+            color={isFavoriteState ? "#f43f5e" : "#000"}
+            fill={isFavoriteState ? "#f43f5e" : "transparent"}
           />
-        </View>
+        </Pressable>
       </View>
 
       {/* Product Info */}

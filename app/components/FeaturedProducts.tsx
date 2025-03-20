@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { View, Text, ScrollView, Pressable } from "react-native";
 import { Image } from "expo-image";
 import { ChevronRight } from "lucide-react-native";
@@ -129,19 +129,8 @@ const FeaturedProducts = ({
         </Pressable>
       </View>
 
-      {/* Promotional Banner */}
-      <Pressable className="mx-4 mb-4 rounded-lg overflow-hidden h-[100px]">
-        <Image
-          source={{ uri: bannerImage }}
-          className="absolute w-full h-full"
-          contentFit="cover"
-        />
-        <View className="absolute inset-0 bg-black/30" />
-        <View className="p-4 justify-center h-full">
-          <Text className="text-white font-bold text-xl">{bannerTitle}</Text>
-          <Text className="text-white text-sm">{bannerSubtitle}</Text>
-        </View>
-      </Pressable>
+      {/* Promotional Banner Slideshow */}
+      <BannerSlideshow />
 
       {/* Products Carousel */}
       <ScrollView
@@ -166,6 +155,78 @@ const FeaturedProducts = ({
           />
         ))}
       </ScrollView>
+    </View>
+  );
+};
+
+// Banner Slideshow Component
+const BannerSlideshow = () => {
+  const [currentBannerIndex, setCurrentBannerIndex] = useState(0);
+
+  const banners = [
+    {
+      image:
+        "https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?w=800&q=80",
+      title: "Summer Sale",
+      subtitle: "Up to 50% off on selected items",
+    },
+    {
+      image:
+        "https://images.unsplash.com/photo-1556742502-ec7c0e9f34b1?w=800&q=80",
+      title: "New Arrivals",
+      subtitle: "Check out our latest products",
+    },
+    {
+      image:
+        "https://images.unsplash.com/photo-1556740738-b6a63e27c4df?w=800&q=80",
+      title: "Tech Deals",
+      subtitle: "Save big on electronics",
+    },
+    {
+      image:
+        "https://images.unsplash.com/photo-1556741533-6e6a62bd8b49?w=800&q=80",
+      title: "Free Shipping",
+      subtitle: "On orders over $50",
+    },
+  ];
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentBannerIndex((prevIndex) =>
+        prevIndex === banners.length - 1 ? 0 : prevIndex + 1,
+      );
+    }, 5000);
+
+    return () => clearInterval(interval);
+  }, []);
+
+  return (
+    <View className="mx-4 mb-4 rounded-lg overflow-hidden h-[100px]">
+      <Image
+        source={{ uri: banners[currentBannerIndex].image }}
+        className="absolute w-full h-full"
+        contentFit="cover"
+        transition={1000}
+      />
+      <View className="absolute inset-0 bg-black/30" />
+      <View className="p-4 justify-center h-full">
+        <Text className="text-white font-bold text-xl">
+          {banners[currentBannerIndex].title}
+        </Text>
+        <Text className="text-white text-sm">
+          {banners[currentBannerIndex].subtitle}
+        </Text>
+      </View>
+
+      {/* Dots indicator */}
+      <View className="absolute bottom-2 w-full flex-row justify-center">
+        {banners.map((_, index) => (
+          <View
+            key={index}
+            className={`h-2 w-2 rounded-full mx-1 ${index === currentBannerIndex ? "bg-white" : "bg-white/50"}`}
+          />
+        ))}
+      </View>
     </View>
   );
 };

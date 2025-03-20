@@ -111,7 +111,7 @@ const PopularProducts = ({
   const router = useRouter();
 
   return (
-    <View className="bg-gray-50 py-4 px-2 h-[350px]">
+    <View className="bg-gray-50 py-4 px-2">
       <View className="flex-row justify-between items-center mb-4 px-2">
         <Text className="text-xl font-bold text-gray-800">{title}</Text>
         <Pressable
@@ -123,26 +123,23 @@ const PopularProducts = ({
         </Pressable>
       </View>
 
-      <ScrollView
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        contentContainerStyle={{ paddingHorizontal: 6 }}
-      >
+      <View className="flex-row flex-wrap">
         {products.map((product) => (
-          <ProductCard
-            key={product.id}
-            id={product.id}
-            name={product.name}
-            price={product.price}
-            image={product.image}
-            isFavorite={product.isFavorite}
-            discount={product.discount}
-            discountEnds={product.discountEnds}
-            onPress={() => router.push(`/product/${product.id}`)}
-            onFavoritePress={() => onFavoritePress(product.id)}
-          />
+          <View key={product.id} className="w-1/2 p-2">
+            <ProductCard
+              id={product.id}
+              name={product.name}
+              price={product.price}
+              image={product.image}
+              isFavorite={product.isFavorite}
+              discount={product.discount}
+              discountEnds={product.discountEnds}
+              onPress={() => router.push(`/product/${product.id}`)}
+              onFavoritePress={() => onFavoritePress(product.id)}
+            />
+          </View>
         ))}
-      </ScrollView>
+      </View>
     </View>
   );
 };

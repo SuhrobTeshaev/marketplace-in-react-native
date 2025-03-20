@@ -1,5 +1,13 @@
-import React from "react";
-import { View, Text, ScrollView, StatusBar, SafeAreaView } from "react-native";
+import React, { useEffect, useState } from "react";
+import {
+  View,
+  Text,
+  ScrollView,
+  StatusBar,
+  SafeAreaView,
+  ActivityIndicator,
+  RefreshControl,
+} from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useRouter } from "expo-router";
 
@@ -8,13 +16,22 @@ import CategoryNav from "./components/CategoryNav";
 import FeaturedProducts from "./components/FeaturedProducts";
 import PopularProducts from "./components/PopularProducts";
 import { useCart } from "./context/CartContext";
+import { useFavorites } from "./context/FavoritesContext";
 
 export default function HomeScreen() {
   const insets = useSafeAreaInsets();
   const router = useRouter();
   const { getCartItemCount } = useCart();
+  const { getFavoritesCount } = useFavorites();
   const cartItemCount = getCartItemCount();
-  const [favoritesCount, setFavoritesCount] = React.useState(3);
+  const favoritesCount = getFavoritesCount();
+
+  const [page, setPage] = useState(1);
+  const [loading, setLoading] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
+  const [hasMoreProducts, setHasMoreProducts] = useState(true);
+  const [displayedProducts, setDisplayedProducts] = useState([]);
+  const PRODUCTS_PER_PAGE = 10;
 
   const [searchQuery, setSearchQuery] = React.useState("");
 
@@ -355,12 +372,69 @@ export default function HomeScreen() {
     return categories[categoryId] || "";
   }
 
+  // Load more products with pagination
+  const loadMoreProducts = () => {
+    if (loading || !hasMoreProducts) return;
+
+    setLoading(true);
+
+    // Simulate API call delay
+    setTimeout(() => {
+      const startIndex = (page - 1) * PRODUCTS_PER_PAGE;
+      const endIndex = startIndex + PRODUCTS_PER_PAGE;
+      const newProducts = filteredProducts.slice(startIndex, endIndex);
+
+      if (newProducts.length > 0) {
+        setDisplayedProducts((prev) => [...prev, ...newProducts]);
+        setPage((prev) => prev + 1);
+      }
+
+      // Check if we've reached the end
+      if (endIndex >= filteredProducts.length) {
+        setHasMoreProducts(false);
+      }
+
+      setLoading(false);
+    }, 1000);
+  };
+
+  // Handle refresh
+  const onRefresh = () => {
+    setRefreshing(true);
+    setPage(1);
+    setHasMoreProducts(true);
+
+    // Reset displayed products
+    setTimeout(() => {
+      const initialProducts = filteredProducts.slice(0, PRODUCTS_PER_PAGE);
+      setDisplayedProducts(initialProducts);
+      setRefreshing(false);
+    }, 1000);
+  };
+
+  // Initial load
+  useEffect(() => {
+    const initialProducts = filteredProducts.slice(0, PRODUCTS_PER_PAGE);
+    setDisplayedProducts(initialProducts);
+    setHasMoreProducts(filteredProducts.length > PRODUCTS_PER_PAGE);
+  }, [filteredProducts]);
+
+  // Handle scroll end to load more
+  const handleScrollEnd = ({ nativeEvent }) => {
+    const { layoutMeasurement, contentOffset, contentSize } = nativeEvent;
+    const paddingToBottom = 20;
+
+    if (
+      layoutMeasurement.height + contentOffset.y >=
+      contentSize.height - paddingToBottom
+    ) {
+      loadMoreProducts();
+    }
+  };
+
   // Split filtered products into featured and popular
   const featuredProducts = filteredProducts.slice(
     0,
-    Math.min(10, filteredProducts.length),
-  );
-  const popularProducts = filteredProducts.slice(
     Math.min(10, filteredProducts.length),
   );
 
@@ -377,6 +451,11 @@ export default function HomeScreen() {
         className="flex-1"
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{ paddingBottom: 20 }}
+        onScroll={handleScrollEnd}
+        scrollEventThrottle={400}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
       >
         <CategoryNav onSelectCategory={handleCategorySelect} />
 
@@ -402,17 +481,32 @@ export default function HomeScreen() {
           </Text>
         </View>
 
-        {popularProducts.length > 0 && (
+        {displayedProducts.length > 0 && (
           <PopularProducts
             title={
               selectedCategory === "1" ? "Popular Right Now" : "More Products"
             }
             viewAllText="See All"
-            products={popularProducts}
+            products={displayedProducts}
             onViewAllPress={handleViewAllPopular}
             onProductPress={handleProductPress}
             onFavoritePress={handleFavoritePress}
           />
+        )}
+
+        {loading && (
+          <View className="py-4 items-center justify-center">
+            <ActivityIndicator size="small" color="#2563eb" />
+            <Text className="text-sm text-gray-500 mt-2">
+              Loading more products...
+            </Text>
+          </View>
+        )}
+
+        {!hasMoreProducts && displayedProducts.length > 0 && (
+          <Text className="text-center text-gray-500 py-4">
+            No more products to load
+          </Text>
         )}
 
         {filteredProducts.length === 0 && (
